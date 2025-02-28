@@ -1,0 +1,48 @@
+version: "3.9"
+
+services:
+  postgres-catalog:
+    image: postgres:14.8
+    ports:
+      - 5432:5432
+    environment:
+      - POSTGRES_DB=catalog_local
+      - POSTGRES_PASSWORD=postgres
+    volumes:
+      - ./pg_data_catalog:/var/lib/postgresql/data
+  postgres-discount:
+    image: postgres:14.8
+    ports:
+      - 5432:5433
+    environment:
+      - POSTGRES_DB=discount_local
+      - POSTGRES_PASSWORD=postgres
+    volumes:
+      - ./pg_data_discount:/var/lib/postgresql/data
+  postgres-ordering:
+    image: postgres:14.8
+    ports:
+      - 5432:5434
+    environment:
+      - POSTGRES_DB=ordering_local
+      - POSTGRES_PASSWORD=postgres
+    volumes:
+      - ./pg_data_ordering:/var/lib/postgresql/data
+  redis-backet:
+    image: redis:6.2-alpine
+    restart: always 
+    ports:
+      - '6379:6379'
+    command: redis-server --save 20 1 --loglevel warning --requirepass eYVX7EwVmmxKPCDmwMtyKVge8oLd2t81
+    volumes:
+      - ./redis_data:/data
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: rabbitmq
+    ports:
+      - 5672:5672
+      - 15672:15672
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
+volumes:
+  rabbitmq_data
